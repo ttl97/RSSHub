@@ -122,29 +122,13 @@ About PAC script, please refer to [Proxy Auto-Configuration (PAC) file](https://
 
 `PROXY_URL_REGEX`: regex for url of enabling proxy, default to `.*`
 
-## User Authentication Configurations
-
-Routes in `protected_route.js` will be protected using HTTP Basic Authentication.
-
-When adding feeds using RSS readers with HTTP Basic Authentication support, authentication information is required, eg: `https://usernam3:passw0rd@rsshub.app/protected/rsshub/routes`.
-
-For readers that do not support HTTP Basic authentication, please refer to [Access Control Configuration](#access-control-configuration).
-
-`HTTP_BASIC_AUTH_NAME`: HTTP basic authentication username, default to `usernam3`, please change asap
-
-`HTTP_BASIC_AUTH_PASS`: HTTP basic authentication password, default to `passw0rd`, please change asap
-
 ## Access Control Configurations
 
-RSSHub supports access control via access key/code, allowlisting and denylisting, enabling any will activate access control for all routes. `ALLOW_LOCALHOST: true` will grant access to all localhost IP addresses.
+RSSHub supports access control using access keys/codes. Enabling it will activate global access control, and lack of access permission will result in denied access.
 
 ### Allowlisting/denylisting
 
--   `ALLOWLIST`: the allowlist. When set, values in `DENYLIST` are disregarded
-
--   `DENYLIST`: the denylist
-
-Allowlisting/denylisting support IP, route and UA as values, fuzzy matching. Use `,` as the delimiter to separate multiple values, eg: `ALLOWLIST=1.1.1.1,2.2.2.2,/qdaily/column/59`
+This configuration has been removed. It is recommended to use a proxy server such as Nginx or Cloudflare for access control.
 
 ### Access Key/Code
 
@@ -159,13 +143,6 @@ Access code is the md5 generated based on the access key + route, eg:
 -   Routes are accessible via `code`, eg: `https://rsshub.app/qdaily/column/59?code=0f820530128805ffc10351f22b5fd121`
 
 -   Or using `key` directly, eg: `https://rsshub.app/qdaily/column/59?key=ILoveRSSHub`
-
-See the relation between access key/code and allowlist/denylisting.
-
-|             | Allowlist | Denylist | Correct access key/code | Wrong access key/code | No access key/code |
-| ----------- | ----------- | ----------- | ----------------------- | --------------------- | ------------------ |
-| Allowlist | ✅          | ✅          | ✅                      | ✅                    | ✅                 |
-| Denylist | ✅          | ❌          | ✅                      | ❌                    | ❌                 |
 
 ## Logging Configurations
 
@@ -209,7 +186,7 @@ It is also valid to contain route parameters, e.g. `/weibo/user/2612249974`.
 
 ## Features
 
-:::tip Experimental features
+:::tip[Experimental features]
 
 Configs in this sections are in beta stage, and **are turn off by default**. Please read corresponded description and turn on if necessary.
 
@@ -220,6 +197,8 @@ Configs in this sections are in beta stage, and **are turn off by default**. Ple
 `FILTER_REGEX_ENGINE`: Define Regex engine used in [Parameters->filtering](/parameter#filtering). Valid value are `[re2, regexp]`. Default value is `re2`. We suggest public instance should leave this value to default, and this option right now is mainly for backward compatibility.
 
 `ALLOW_USER_SUPPLY_UNSAFE_DOMAIN`: allow users to provide a domain as a parameter to routes that are not in their allow list, respectively. Public instances are suggested to leave this value default, as it may lead to [Server-Side Request Forgery (SSRF)](https://owasp.org/www-community/attacks/Server_Side_Request_Forgery)
+
+`MEDIA_PROXY_KEY`: the access key for internal media proxy.
 
 ## Other Application Configurations
 
@@ -490,7 +469,8 @@ Remember to check `user-top-read` and `user-library-read` in the scope for `Pers
 
 [Bot application](https://telegram.org/blog/bot-revolution)
 
--   `TELEGRAM_TOKEN`: Telegram bot token
+-   `TELEGRAM_TOKEN`: Telegram bot token for stickerpack feeds
+-   `TELEGRAM_SESSION`: for video and file streaming, can be acquired by running `node lib/routes/telegram/tglib/client.js`
 
 ### Twitter
 

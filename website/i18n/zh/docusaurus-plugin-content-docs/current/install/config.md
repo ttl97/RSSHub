@@ -121,29 +121,12 @@ async function handleRequest(request) {
 }
 ```
 
-## 用户认证
-
-`protected_route.js` 内的路由将启用 HTTP Basic Authentication 认证
-
-支持该认证协议的阅读器，在添加源地址时，需要在源地址前添加认证信息，例如：`http://usernam3:passw0rd@rsshub.app/protected/rsshub/routes`。
-
-对于不支持该认证协议的阅读器，请参考 [访问控制配置](#fang-wen-kong-zhi-pei-zhi)。
-
-`HTTP_BASIC_AUTH_NAME`: Http basic authentication 用户名，默认为 `usernam3`，请务必修改
-
-`HTTP_BASIC_AUTH_PASS`: Http basic authentication 密码，默认为 `passw0rd`，请务必修改
-
 ## 访问控制配置
 
-RSSHub 支持使用访问密钥 / 码，允许清单和拒绝清单三种方式进行访问控制。开启任意选项将会激活全局访问控制，没有访问权限将会导致访问被拒绝。同时可以通过 `ALLOW_LOCALHOST: true` 赋予所有本地 IP 访问权限。
-
+RSSHub 支持使用访问密钥 / 码进行访问控制。开启将会激活全局访问控制，没有访问权限将会导致访问被拒绝。
 ### 允许清单/拒绝清单
 
--   `ALLOWLIST`: 允许清单，设置允许清单后拒绝清单无效
-
--   `DENYLIST`: 拒绝清单
-
-允许清单/拒绝清单支持 IP、路由和 UA，模糊匹配，设置多项时用英文逗号 `,` 隔开，例如 `ALLOWLIST=1.1.1.1,2.2.2.2,/qdaily/column/59`
+此配置已被移除，建议使用类似 Nginx 或 Cloudflare 的代理服务器进行访问控制。
 
 ### 访问密钥 / 码
 
@@ -158,14 +141,6 @@ RSSHub 支持使用访问密钥 / 码，允许清单和拒绝清单三种方式�
 -   此时可以通过 `code` 访问路由，例如：`https://rsshub.app/qdaily/column/59?code=0f820530128805ffc10351f22b5fd121`
 
 -   或使用访问密钥 `key` 直接访问所有路由，例如：`https://rsshub.app/qdaily/column/59?key=ILoveRSSHub`
-
-访问密钥 / 码与允许清单/拒绝清单的访问控制关系如下：
-
-|            | 正确访问密钥 / 码 | 错误访问密钥 / 码 | 无访问密钥 / 码 |
-| ---------- | ----------------- | ----------------- | --------------- |
-| 在允许清单中 | ✅                | ✅                | ✅              |
-| 在拒绝清单中 | ✅                | ❌                | ❌              |
-| 无允许清单/拒绝清单 | ✅                | ❌                | ❌              |
 
 ## 日志配置
 
@@ -209,7 +184,7 @@ RSSHub 支持使用访问密钥 / 码，允许清单和拒绝清单三种方式�
 
 ## 功能特性
 
-:::tip 测试特性
+:::tip[测试特性]
 
 这个板块控制的是一些新特性的选项，他们都是**默认关闭**的。如果有需要请阅读对应说明后按需开启
 
@@ -220,6 +195,8 @@ RSSHub 支持使用访问密钥 / 码，允许清单和拒绝清单三种方式�
 `FILTER_REGEX_ENGINE`: 控制 [通用参数 -> 内容过滤](/zh/parameter#内容过滤) 使用的正则引擎。可选`[re2, regexp]`，默认`re2`。我们推荐公开实例不要调整这个选项，这个选项目前主要用于向后兼容。
 
 `ALLOW_USER_SUPPLY_UNSAFE_DOMAIN`: 允许用户为路由提供域名作为参数。建议公共实例不要调整此选项，开启后可能会导致 [服务端请求伪造（SSRF）](https://owasp.org/www-community/attacks/Server_Side_Request_Forgery)
+
+`MEDIA_PROXY_KEY`: 内置多媒体代理的访问密钥
 
 ## 其他应用配置
 
@@ -470,6 +447,7 @@ RSSHub 支持使用访问密钥 / 码，允许清单和拒绝清单三种方式�
 贴纸包路由：[Telegram 机器人](https://telegram.org/blog/bot-revolution)
 
 -   `TELEGRAM_TOKEN`: Telegram 机器人 token
+-   `TELEGRAM_SESSION`: 可通过运行 `node lib/routes/telegram/tglib/client.js`
 
 ### Twitter
 
